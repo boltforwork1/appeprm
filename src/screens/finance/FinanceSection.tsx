@@ -25,7 +25,7 @@ export function FinanceSection() {
   return (
     <PageContainer>
       <SectionTabs tabs={tabs} active={active} onChange={setActive} />
-      <div className="pt-4">
+      <div className="pt-3">
         {active === 'summary' && <SummaryTab />}
         {active === 'expenses' && <ExpensesTab />}
         {active === 'revenues' && <RevenuesTab />}
@@ -84,7 +84,7 @@ function SummaryTab() {
           const profit = s.revenue - s.expense;
           const profitTone = profit >= 0 ? 'green' : 'red';
           return (
-            <div key={p.id} className="rounded-2xl bg-white p-4 shadow-sm ring-1 ring-sand-100">
+            <div key={p.id} className="rounded-2xl bg-white p-4 ring-1 ring-sand-100">
               <p className="mb-2 text-base font-bold text-sand-800">{p.name}</p>
               <div className="grid grid-cols-2 gap-2 text-sm">
                 <div className="rounded-xl bg-emerald-50 p-2.5">

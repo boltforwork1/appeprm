@@ -16,7 +16,7 @@ export function ListCard({
   return (
     <button
       onClick={onClick}
-      className="flex w-full items-center gap-3 rounded-2xl bg-white p-4 text-right shadow-sm ring-1 ring-sand-100 active:scale-[0.99] transition"
+      className="flex w-full items-center gap-3 rounded-2xl bg-white p-4 text-right ring-1 ring-sand-100 active:scale-[0.99] transition"
     >
       <div className="min-w-0 flex-1">
         <p className="truncate text-base font-bold text-sand-800">{title}</p>

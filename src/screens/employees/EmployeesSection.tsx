@@ -33,7 +33,7 @@ export function EmployeesSection() {
   return (
     <PageContainer>
       <SectionTabs tabs={tabs} active={active} onChange={setActive} />
-      <div className="pt-4">
+      <div className="pt-3">
         {active === 'employees' && <EmployeesTab />}
         {active === 'attendance' && <AttendanceTab />}
         {active === 'salaries' && <SalariesTab />}

@@ -35,7 +35,7 @@ export function WarehousesSection() {
   return (
     <PageContainer>
       <SectionTabs tabs={tabs} active={active} onChange={setActive} />
-      <div className="pt-4">
+      <div className="pt-3">
         {active === 'warehouses' && <WarehousesTab />}
         {active === 'stock' && <StockTab />}
         {active === 'requests' && <RequestsTab />}

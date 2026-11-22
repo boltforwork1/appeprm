@@ -39,7 +39,7 @@ export function ProjectsSection() {
   return (
     <PageContainer>
       <SectionTabs tabs={tabs} active={active} onChange={setActive} />
-      <div className="pt-4">
+      <div className="pt-3">
         {active === 'projects' && <ProjectsTab />}
         {active === 'notes' && <NotesTab />}
       </div>

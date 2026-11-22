@@ -69,17 +69,19 @@ export function BottomNav() {
   const loc = useLocation();
 
   return (
-    <nav className="fixed bottom-0 left-1/2 z-30 w-full max-w-md -translate-x-1/2 border-t border-sand-200 bg-white/95 backdrop-blur-md pb-[env(safe-area-inset-bottom)] shadow-[0_-4px_20px_rgba(0,0,0,0.06)]">
-      <div className="flex items-stretch justify-between px-1">
+    <nav
+      className="z-30 shrink-0 border-t border-sand-200 bg-white pb-[env(safe-area-inset-bottom)] shadow-[0_-2px_12px_rgba(0,0,0,0.05)]"
+    >
+      <div className="no-scrollbar flex items-stretch justify-between px-1">
         {items.map((it) => {
           const active = loc.pathname.startsWith(it.to);
           return (
             <NavLink
               key={it.to}
               to={it.to}
-              className={`flex flex-1 flex-col items-center gap-0.5 py-2.5 transition ${active ? 'text-brand-600' : 'text-sand-400'}`}
+              className={`flex flex-1 flex-col items-center gap-0.5 py-2.5 ${active ? 'text-brand-600' : 'text-sand-400'}`}
             >
-              <span className={`transition ${active ? '-translate-y-0.5' : ''}`}>{it.icon}</span>
+              <span>{it.icon}</span>
               <span className={`text-[11px] font-semibold ${active ? 'text-brand-600' : 'text-sand-400'}`}>{it.label}</span>
             </NavLink>
           );

@@ -5,6 +5,8 @@ import { AppHeader, EmptyState, ErrorView, FAB, Loading, PageContainer, SearchBa
 import { DeleteButton, SelectField, Sheet, SubmitButton, TextAreaField, TextField } from './form';
 import { ListCard } from './card';
 
+const PAGE_SIZE = 50;
+
 export type Field =
   | { key: string; label: string; type: 'text' | 'number' | 'textarea' | 'date'; required?: boolean; placeholder?: string; step?: string }
   | { key: string; label: string; type: 'select'; options: { value: string; label: string }[]; required?: boolean }
@@ -30,12 +32,16 @@ export function ResourceScreen<T extends Record<string, unknown> & { id: string 
   const [saving, setSaving] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
+  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
 
   const foreignFields = fields.filter((f): f is Extract<Field, { type: 'foreign' }> => f.type === 'foreign');
   const foreignRefs: ForeignRef[] = foreignFields.map((f) => ({ table: f.table, labelColumn: f.labelColumn, filter: f.filter }));
   const { map: foreignMap } = useForeignOptionsBatch(foreignRefs);
 
   const { rows, loading, error, reload } = useList<T>(table, { search, searchColumns, extraFilter });
+
+  const visibleRows = rows.slice(0, visibleCount);
+  const hasMore = rows.length > visibleCount;
 
   const openAdd = useCallback(() => {
     setEditing(null);
@@ -130,17 +136,47 @@ export function ResourceScreen<T extends Record<string, unknown> & { id: string 
       ) : rows.length === 0 ? (
         <EmptyState title="لا توجد عناصر بعد" hint="اضغط زر الإضافة لإنشاء أول عنصر" />
       ) : (
-        <div className="flex flex-col gap-2.5 px-4">
-          {rows.map((row) => {
-            const card = renderCard(row);
-            return <ListCard key={row.id} title={card.title} subtitle={card.subtitle} meta={card.meta} onClick={() => openEdit(row)} />;
-          })}
-        </div>
+        <>
+          <div className="flex flex-col gap-2.5 px-4">
+            {visibleRows.map((row) => {
+              const card = renderCard(row);
+              return <ListCard key={row.id} title={card.title} subtitle={card.subtitle} meta={card.meta} onClick={() => openEdit(row)} />;
+            })}
+          </div>
+          {hasMore && (
+            <div className="px-4 py-4">
+              <button
+                onClick={() => setVisibleCount((c) => c + PAGE_SIZE)}
+                className="w-full rounded-xl border border-sand-200 bg-white py-3 text-sm font-semibold text-brand-600 active:scale-[0.98] transition"
+              >
+                عرض المزيد ({rows.length - visibleCount} المتبقية)
+              </button>
+            </div>
+          )}
+        </>
       )}
 
-      <FAB onClick={openAdd} />
+      <div className="px-4 pb-4">
+        <FAB onClick={openAdd} />
+      </div>
 
-      <Sheet open={sheetOpen} onClose={() => setSheetOpen(false)} title={editing ? 'تعديل' : 'إضافة جديد'}>
+      <Sheet
+        open={sheetOpen}
+        onClose={() => setSheetOpen(false)}
+        title={editing ? 'تعديل' : 'إضافة جديد'}
+        footer={
+          <>
+            {formError && (
+              <div className="mb-3 rounded-xl bg-red-50 p-3 text-center">
+                <p className="text-sm font-semibold text-red-600">حدث خطأ</p>
+                <p className="mt-0.5 text-xs text-red-500 break-words">{formError}</p>
+              </div>
+            )}
+            <SubmitButton label={editing ? 'حفظ التعديلات' : 'حفظ'} loading={saving} onClick={save} />
+            {editing && <DeleteButton onClick={doDelete} loading={deleting} />}
+          </>
+        }
+      >
         {fields.map((f) => {
           if (f.type === 'textarea') {
             return (
@@ -189,16 +225,6 @@ export function ResourceScreen<T extends Record<string, unknown> & { id: string 
             />
           );
         })}
-
-        {formError && (
-          <div className="mb-4 rounded-xl bg-red-50 p-3 text-center">
-            <p className="text-sm font-semibold text-red-600">حدث خطأ</p>
-            <p className="mt-0.5 text-xs text-red-500 break-words">{formError}</p>
-          </div>
-        )}
-
-        <SubmitButton label={editing ? 'حفظ التعديلات' : 'حفظ'} loading={saving} onClick={save} />
-        {editing && <DeleteButton onClick={doDelete} loading={deleting} />}
       </Sheet>
     </PageContainer>
   );

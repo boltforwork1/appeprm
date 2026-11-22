@@ -29,10 +29,10 @@ export function Login() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col bg-gradient-to-b from-brand-700 via-brand-600 to-brand-800">
-      <div className="flex flex-1 flex-col justify-center px-6 pt-[calc(env(safe-area-inset-top)+3rem)]">
+    <div className="app-shell bg-gradient-to-b from-brand-700 via-brand-600 to-brand-800">
+      <div className="app-scroll flex flex-col justify-center px-6 pt-[calc(env(safe-area-inset-top)+3rem)] pb-[calc(env(safe-area-inset-bottom)+2rem)]">
         <div className="mb-8 text-center text-white">
-          <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-3xl bg-white/15 backdrop-blur-sm shadow-lg">
+          <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-3xl bg-white/15 shadow-lg">
             <svg viewBox="0 0 24 24" className="h-10 w-10" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round">
               <path d="M3 21h18M5 21V7l8-4v18M19 21V11l-6-4M9 9v.01M9 12v.01M9 15v.01M9 18v.01" />
             </svg>

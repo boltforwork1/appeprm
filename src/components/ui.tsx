@@ -2,7 +2,7 @@ import type { ReactNode } from 'react';
 
 export function AppHeader({ title, subtitle, onBack }: { title: string; subtitle?: string; onBack?: () => void }) {
   return (
-    <header className="sticky top-0 z-20 bg-gradient-to-l from-brand-700 to-brand-600 text-white shadow-md">
+    <header className="bg-gradient-to-l from-brand-700 to-brand-600 text-white">
       <div className="flex items-center gap-3 px-4 py-4 pt-[calc(env(safe-area-inset-top)+1rem)]">
         {onBack && (
           <button
@@ -25,7 +25,7 @@ export function AppHeader({ title, subtitle, onBack }: { title: string; subtitle
 }
 
 export function PageContainer({ children }: { children: ReactNode }) {
-  return <div className="mx-auto min-h-screen max-w-md bg-sand-50 pb-24 animate-fade-in">{children}</div>;
+  return <div className="bg-sand-50 pb-28">{children}</div>;
 }
 
 export function SearchBar({ value, onChange, placeholder = 'بحث…' }: { value: string; onChange: (v: string) => void; placeholder?: string }) {
@@ -51,7 +51,7 @@ export function FAB({ onClick, label = 'إضافة' }: { onClick: () => void; la
   return (
     <button
       onClick={onClick}
-      className="fixed bottom-24 left-1/2 z-30 flex -translate-x-1/2 items-center gap-2 rounded-full bg-brand-600 px-6 py-4 text-base font-bold text-white shadow-lg shadow-brand-600/30 active:scale-95 transition"
+      className="sticky bottom-4 z-20 mx-auto flex items-center gap-2 rounded-full bg-brand-600 px-6 py-4 text-base font-bold text-white shadow-lg shadow-brand-600/30 active:scale-95 transition"
     >
       <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round">
         <path d="M12 5v14M5 12h14" />

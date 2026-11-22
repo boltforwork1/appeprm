@@ -23,7 +23,7 @@ export function MaterialsSection() {
   return (
     <PageContainer>
       <SectionTabs tabs={tabs} active={active} onChange={setActive} />
-      <div className="pt-4">
+      <div className="pt-3">
         {active === 'materials' && <MaterialsTab />}
         {active === 'quotes' && <QuotesTab />}
         {active === 'electricity' && <PriceListTab listName="كهرباء" />}
