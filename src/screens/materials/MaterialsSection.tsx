@@ -99,7 +99,7 @@ function QuotesTab() {
 
 function PriceListTab({ listName }: { listName: string }) {
   const fields: Field[] = [
-    { key: 'list_name', label: 'القائمة', type: 'text', required: true },
+    { key: 'list_name', label: 'القائمة', type: 'text', required: true, defaultValue: listName, hidden: true },
     { key: 'material_id', label: 'المادة', type: 'foreign', table: 'materials', labelColumn: 'name', addRoute: '/materials', entityLabel: 'مادة' },
     { key: 'price', label: 'السعر', type: 'number', step: '0.01' },
     { key: 'unit', label: 'الوحدة', type: 'text', placeholder: 'متر / طن' },

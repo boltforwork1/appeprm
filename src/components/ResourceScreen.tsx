@@ -9,10 +9,10 @@ import { ListCard } from './card';
 const PAGE_SIZE = 50;
 
 export type Field =
-  | { key: string; label: string; type: 'text' | 'number' | 'textarea' | 'date'; required?: boolean; placeholder?: string; step?: string }
-  | { key: string; label: string; type: 'select'; options: { value: string; label: string }[]; required?: boolean }
-  | { key: string; label: string; type: 'boolean'; options: { value: string; label: string }[]; required?: boolean }
-  | { key: string; label: string; type: 'foreign'; table: string; labelColumn: string; filter?: { column: string; value: string }; required?: boolean; addRoute?: string; entityLabel?: string };
+  | { key: string; label: string; type: 'text' | 'number' | 'textarea' | 'date'; required?: boolean; placeholder?: string; step?: string; defaultValue?: string; hidden?: boolean }
+  | { key: string; label: string; type: 'select'; options: { value: string; label: string }[]; required?: boolean; hidden?: boolean }
+  | { key: string; label: string; type: 'boolean'; options: { value: string; label: string }[]; required?: boolean; hidden?: boolean }
+  | { key: string; label: string; type: 'foreign'; table: string; labelColumn: string; filter?: { column: string; value: string }; required?: boolean; addRoute?: string; entityLabel?: string; hidden?: boolean };
 
 export type CardRenderer<T> = (row: T) => { title: string; subtitle?: string; meta?: React.ReactNode };
 
@@ -52,7 +52,8 @@ export function ResourceScreen<T extends Record<string, unknown> & { id: string 
     const init: Record<string, string> = {};
     fields.forEach((f) => {
       if (f.type === 'select' || f.type === 'boolean') init[f.key] = f.options[0]?.value ?? '';
-      else init[f.key] = '';
+      else if (f.type === 'foreign') init[f.key] = '';
+      else init[f.key] = f.defaultValue ?? '';
     });
     setForm(init);
     setFormError(null);
@@ -181,7 +182,7 @@ export function ResourceScreen<T extends Record<string, unknown> & { id: string 
           <>
             {formError && (
               <div className="mb-3 rounded-xl bg-red-50 p-3 text-center">
-                <p className="text-sm font-semibold text-red-600">حدث خطأ</p>
+                <p className="text-sm font-semibold text-red-600">تعذّر الحفظ</p>
                 <p className="mt-0.5 text-xs text-red-500 break-words">{formError}</p>
               </div>
             )}
@@ -191,6 +192,7 @@ export function ResourceScreen<T extends Record<string, unknown> & { id: string 
         }
       >
         {fields.map((f) => {
+          if (f.hidden) return null;
           if (f.type === 'textarea') {
             return (
               <TextAreaField
@@ -222,6 +224,7 @@ export function ResourceScreen<T extends Record<string, unknown> & { id: string 
               return (
                 <div key={f.key} className="mb-4 rounded-xl bg-amber-50 p-3.5 text-center">
                   <p className="text-sm font-semibold text-amber-800">أضف {f.entityLabel ?? 'عنصر'} أولاً</p>
+                  {!f.required && <p className="mt-0.5 text-xs text-amber-600">هذا الحقل اختياري — يمكنك الحفظ بدونه</p>}
                   {f.addRoute && (
                     <button
                       onClick={() => { setSheetOpen(false); navigate(f.addRoute); }}
@@ -233,13 +236,17 @@ export function ResourceScreen<T extends Record<string, unknown> & { id: string 
                 </div>
               );
             }
+            const selectOptions = [
+              ...(f.required ? [] : [{ value: '', label: 'بدون' }]),
+              ...opts.map((o) => ({ value: o.id, label: o.label })),
+            ];
             return (
               <SelectField
                 key={f.key}
                 label={f.label + (f.required ? ' *' : '')}
                 value={form[f.key] ?? ''}
                 onChange={(v) => setForm((p) => ({ ...p, [f.key]: v }))}
-                options={opts.map((o) => ({ value: o.id, label: o.label }))}
+                options={selectOptions}
                 error={fieldErrors[f.key]}
               />
             );
