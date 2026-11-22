@@ -70,9 +70,9 @@ function ClientsTab() {
 
 function QuotesTab() {
   const fields: Field[] = [
-    { key: 'client_id', label: 'العميل', type: 'foreign', table: 'clients', labelColumn: 'name', required: true },
-    { key: 'amount', label: 'القيمة', type: 'number', required: true, step: '0.01' },
-    { key: 'date', label: 'التاريخ', type: 'date', required: true },
+    { key: 'client_id', label: 'العميل', type: 'foreign', table: 'clients', labelColumn: 'name', addRoute: '/clients', entityLabel: 'عميل' },
+    { key: 'amount', label: 'القيمة', type: 'number', step: '0.01' },
+    { key: 'date', label: 'التاريخ', type: 'date' },
     { key: 'status', label: 'الحالة', type: 'select', options: quoteStatusOptions },
     { key: 'notes', label: 'ملاحظات', type: 'textarea' },
   ];
@@ -100,11 +100,11 @@ function QuotesTab() {
 
 function ContractsTab() {
   const fields: Field[] = [
-    { key: 'client_id', label: 'العميل', type: 'foreign', table: 'clients', labelColumn: 'name', required: true },
-    { key: 'project_id', label: 'المشروع', type: 'foreign', table: 'projects', labelColumn: 'name' },
-    { key: 'value', label: 'القيمة', type: 'number', required: true, step: '0.01' },
+    { key: 'client_id', label: 'العميل', type: 'foreign', table: 'clients', labelColumn: 'name', addRoute: '/clients', entityLabel: 'عميل' },
+    { key: 'project_id', label: 'المشروع', type: 'foreign', table: 'projects', labelColumn: 'name', addRoute: '/projects', entityLabel: 'مشروع' },
+    { key: 'value', label: 'القيمة', type: 'number', step: '0.01' },
     { key: 'status', label: 'الحالة', type: 'select', options: contractStatusOptions },
-    { key: 'start_date', label: 'تاريخ البدء', type: 'date', required: true },
+    { key: 'start_date', label: 'تاريخ البدء', type: 'date' },
     { key: 'notes', label: 'ملاحظات', type: 'textarea' },
   ];
   const renderCard: CardRenderer<Contract> = (r) => ({
@@ -131,9 +131,9 @@ function ContractsTab() {
 
 function FollowUpsTab() {
   const fields: Field[] = [
-    { key: 'client_id', label: 'العميل', type: 'foreign', table: 'clients', labelColumn: 'name', required: true },
-    { key: 'date', label: 'التاريخ', type: 'date', required: true },
-    { key: 'text', label: 'المتابعة', type: 'textarea', required: true },
+    { key: 'client_id', label: 'العميل', type: 'foreign', table: 'clients', labelColumn: 'name', addRoute: '/clients', entityLabel: 'عميل' },
+    { key: 'date', label: 'التاريخ', type: 'date' },
+    { key: 'text', label: 'المتابعة', type: 'textarea' },
   ];
   const renderCard: CardRenderer<FollowUp> = (r) => ({ title: r.date, subtitle: r.text });
   return (
@@ -150,9 +150,9 @@ function FollowUpsTab() {
 
 function CorrespondenceTab() {
   const fields: Field[] = [
-    { key: 'client_id', label: 'العميل', type: 'foreign', table: 'clients', labelColumn: 'name', required: true },
-    { key: 'subject', label: 'الموضوع', type: 'text', required: true },
-    { key: 'date', label: 'التاريخ', type: 'date', required: true },
+    { key: 'client_id', label: 'العميل', type: 'foreign', table: 'clients', labelColumn: 'name', addRoute: '/clients', entityLabel: 'عميل' },
+    { key: 'subject', label: 'الموضوع', type: 'text' },
+    { key: 'date', label: 'التاريخ', type: 'date' },
     { key: 'body', label: 'المحتوى', type: 'textarea' },
   ];
   const renderCard: CardRenderer<Correspondence> = (r) => ({ title: r.subject ?? 'مراسلة', subtitle: r.date });

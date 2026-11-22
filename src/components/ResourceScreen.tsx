@@ -1,4 +1,5 @@
 import { useCallback, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { insertRow, softDeleteRow, updateRow, useList } from '@/lib/crud';
 import { useForeignOptionsBatch, type ForeignRef } from '@/lib/optionsBatch';
 import { AppHeader, EmptyState, ErrorView, FAB, Loading, PageContainer, SearchBar } from './ui';
@@ -10,7 +11,8 @@ const PAGE_SIZE = 50;
 export type Field =
   | { key: string; label: string; type: 'text' | 'number' | 'textarea' | 'date'; required?: boolean; placeholder?: string; step?: string }
   | { key: string; label: string; type: 'select'; options: { value: string; label: string }[]; required?: boolean }
-  | { key: string; label: string; type: 'foreign'; table: string; labelColumn: string; filter?: { column: string; value: string }; required?: boolean };
+  | { key: string; label: string; type: 'boolean'; options: { value: string; label: string }[]; required?: boolean }
+  | { key: string; label: string; type: 'foreign'; table: string; labelColumn: string; filter?: { column: string; value: string }; required?: boolean; addRoute?: string; entityLabel?: string };
 
 export type CardRenderer<T> = (row: T) => { title: string; subtitle?: string; meta?: React.ReactNode };
 
@@ -25,6 +27,7 @@ export function ResourceScreen<T extends Record<string, unknown> & { id: string 
   extraFilter?: { column: string; value: string };
 }) {
   const { table, title, fields, searchColumns, searchPlaceholder, renderCard, extraFilter } = props;
+  const navigate = useNavigate();
   const [search, setSearch] = useState('');
   const [sheetOpen, setSheetOpen] = useState(false);
   const [editing, setEditing] = useState<T | null>(null);
@@ -32,6 +35,7 @@ export function ResourceScreen<T extends Record<string, unknown> & { id: string 
   const [saving, setSaving] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
 
   const foreignFields = fields.filter((f): f is Extract<Field, { type: 'foreign' }> => f.type === 'foreign');
@@ -47,11 +51,12 @@ export function ResourceScreen<T extends Record<string, unknown> & { id: string 
     setEditing(null);
     const init: Record<string, string> = {};
     fields.forEach((f) => {
-      if (f.type === 'select') init[f.key] = f.options[0]?.value ?? '';
+      if (f.type === 'select' || f.type === 'boolean') init[f.key] = f.options[0]?.value ?? '';
       else init[f.key] = '';
     });
     setForm(init);
     setFormError(null);
+    setFieldErrors({});
     setSheetOpen(true);
   }, [fields]);
 
@@ -65,6 +70,7 @@ export function ResourceScreen<T extends Record<string, unknown> & { id: string 
       });
       setForm(init);
       setFormError(null);
+      setFieldErrors({});
       setSheetOpen(true);
     },
     [fields]
@@ -76,6 +82,8 @@ export function ResourceScreen<T extends Record<string, unknown> & { id: string 
       const raw = form[f.key] ?? '';
       if (f.type === 'number') {
         payload[f.key] = raw === '' ? null : Number(raw);
+      } else if (f.type === 'boolean') {
+        payload[f.key] = raw === '' ? null : raw === 'true';
       } else {
         payload[f.key] = raw === '' ? null : raw;
       }
@@ -85,12 +93,17 @@ export function ResourceScreen<T extends Record<string, unknown> & { id: string 
 
   const save = useCallback(async () => {
     setFormError(null);
+    const errors: Record<string, string> = {};
     for (const f of fields) {
       if (f.required && (form[f.key] ?? '') === '') {
-        setFormError('يرجى تعبئة جميع الحقول المطلوبة');
-        return;
+        errors[f.key] = 'هذا الحقل مطلوب';
       }
     }
+    if (Object.keys(errors).length > 0) {
+      setFieldErrors(errors);
+      return;
+    }
+    setFieldErrors({});
     setSaving(true);
     try {
       if (editing) await updateRow<T>(table, editing.id, buildPayload() as Partial<T>);
@@ -98,8 +111,8 @@ export function ResourceScreen<T extends Record<string, unknown> & { id: string 
       setSheetOpen(false);
       await reload();
     } catch (err) {
-      const e = err as { message?: string };
-      console.error(`[ResourceScreen:${table}:save]`, e);
+      const e = err as { code?: string; message?: string; details?: string; hint?: string };
+      console.error(`[ResourceScreen:${table}:save]`, { code: e.code, message: e.message, details: e.details, hint: e.hint });
       setFormError(e.message ?? 'حدث خطأ غير متوقع');
     } finally {
       setSaving(false);
@@ -114,8 +127,8 @@ export function ResourceScreen<T extends Record<string, unknown> & { id: string 
       setSheetOpen(false);
       await reload();
     } catch (err) {
-      const e = err as { message?: string };
-      console.error(`[ResourceScreen:${table}:delete]`, e);
+      const e = err as { code?: string; message?: string; details?: string; hint?: string };
+      console.error(`[ResourceScreen:${table}:delete]`, { code: e.code, message: e.message, details: e.details, hint: e.hint });
       setFormError(e.message ?? 'تعذّر الحذف');
     } finally {
       setDeleting(false);
@@ -186,10 +199,11 @@ export function ResourceScreen<T extends Record<string, unknown> & { id: string 
                 value={form[f.key] ?? ''}
                 onChange={(v) => setForm((p) => ({ ...p, [f.key]: v }))}
                 placeholder={f.placeholder}
+                error={fieldErrors[f.key]}
               />
             );
           }
-          if (f.type === 'select') {
+          if (f.type === 'select' || f.type === 'boolean') {
             return (
               <SelectField
                 key={f.key}
@@ -197,12 +211,28 @@ export function ResourceScreen<T extends Record<string, unknown> & { id: string 
                 value={form[f.key] ?? ''}
                 onChange={(v) => setForm((p) => ({ ...p, [f.key]: v }))}
                 options={f.options}
+                error={fieldErrors[f.key]}
               />
             );
           }
           if (f.type === 'foreign') {
             const idx = foreignFields.indexOf(f);
             const opts = foreignMap[idx] ?? [];
+            if (opts.length === 0) {
+              return (
+                <div key={f.key} className="mb-4 rounded-xl bg-amber-50 p-3.5 text-center">
+                  <p className="text-sm font-semibold text-amber-800">أضف {f.entityLabel ?? 'عنصر'} أولاً</p>
+                  {f.addRoute && (
+                    <button
+                      onClick={() => { setSheetOpen(false); navigate(f.addRoute); }}
+                      className="mt-2 rounded-lg bg-brand-600 px-4 py-2 text-sm font-bold text-white active:scale-95 transition"
+                    >
+                      إضافة {f.entityLabel ?? 'عنصر'}
+                    </button>
+                  )}
+                </div>
+              );
+            }
             return (
               <SelectField
                 key={f.key}
@@ -210,6 +240,7 @@ export function ResourceScreen<T extends Record<string, unknown> & { id: string 
                 value={form[f.key] ?? ''}
                 onChange={(v) => setForm((p) => ({ ...p, [f.key]: v }))}
                 options={opts.map((o) => ({ value: o.id, label: o.label }))}
+                error={fieldErrors[f.key]}
               />
             );
           }
@@ -222,6 +253,7 @@ export function ResourceScreen<T extends Record<string, unknown> & { id: string 
               type={f.type}
               step={f.step}
               placeholder={f.placeholder}
+              error={fieldErrors[f.key]}
             />
           );
         })}

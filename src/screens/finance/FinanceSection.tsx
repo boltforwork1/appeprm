@@ -110,10 +110,10 @@ function SummaryTab() {
 
 function ExpensesTab() {
   const fields: Field[] = [
-    { key: 'project_id', label: 'المشروع', type: 'foreign', table: 'projects', labelColumn: 'name' },
-    { key: 'amount', label: 'المبلغ', type: 'number', required: true, step: '0.01' },
+    { key: 'project_id', label: 'المشروع', type: 'foreign', table: 'projects', labelColumn: 'name', addRoute: '/projects', entityLabel: 'مشروع' },
+    { key: 'amount', label: 'المبلغ', type: 'number', step: '0.01' },
     { key: 'category', label: 'البند', type: 'text', placeholder: 'عمالة / مواد / معدات' },
-    { key: 'date', label: 'التاريخ', type: 'date', required: true },
+    { key: 'date', label: 'التاريخ', type: 'date' },
     { key: 'notes', label: 'ملاحظات', type: 'textarea' },
   ];
   const renderCard: CardRenderer<Expense> = (r) => ({
@@ -135,10 +135,10 @@ function ExpensesTab() {
 
 function RevenuesTab() {
   const fields: Field[] = [
-    { key: 'project_id', label: 'المشروع', type: 'foreign', table: 'projects', labelColumn: 'name' },
-    { key: 'amount', label: 'المبلغ', type: 'number', required: true, step: '0.01' },
+    { key: 'project_id', label: 'المشروع', type: 'foreign', table: 'projects', labelColumn: 'name', addRoute: '/projects', entityLabel: 'مشروع' },
+    { key: 'amount', label: 'المبلغ', type: 'number', step: '0.01' },
     { key: 'source', label: 'المصدر', type: 'text', placeholder: 'دفعة عميل / بيع' },
-    { key: 'date', label: 'التاريخ', type: 'date', required: true },
+    { key: 'date', label: 'التاريخ', type: 'date' },
     { key: 'notes', label: 'ملاحظات', type: 'textarea' },
   ];
   const renderCard: CardRenderer<Revenue> = (r) => ({
@@ -179,9 +179,9 @@ function SuppliersTab() {
 
 function InvoicesTab() {
   const fields: Field[] = [
-    { key: 'supplier_id', label: 'المورّد', type: 'foreign', table: 'suppliers', labelColumn: 'name' },
-    { key: 'project_id', label: 'المشروع', type: 'foreign', table: 'projects', labelColumn: 'name' },
-    { key: 'amount', label: 'المبلغ', type: 'number', required: true, step: '0.01' },
+    { key: 'supplier_id', label: 'المورّد', type: 'foreign', table: 'suppliers', labelColumn: 'name', addRoute: '/finance', entityLabel: 'مورد' },
+    { key: 'project_id', label: 'المشروع', type: 'foreign', table: 'projects', labelColumn: 'name', addRoute: '/projects', entityLabel: 'مشروع' },
+    { key: 'amount', label: 'المبلغ', type: 'number', step: '0.01' },
     {
       key: 'status',
       label: 'الحالة',
@@ -192,7 +192,7 @@ function InvoicesTab() {
         { value: 'paid', label: 'مدفوعة' },
       ],
     },
-    { key: 'date', label: 'التاريخ', type: 'date', required: true },
+    { key: 'date', label: 'التاريخ', type: 'date' },
   ];
   const renderCard: CardRenderer<Invoice> = (r) => ({
     title: 'فاتورة',

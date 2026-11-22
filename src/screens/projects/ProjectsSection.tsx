@@ -50,7 +50,7 @@ export function ProjectsSection() {
 function ProjectsTab() {
   const fields: Field[] = [
     { key: 'name', label: 'اسم المشروع', type: 'text', required: true, placeholder: 'فيلا الشيخ محمد' },
-    { key: 'client_id', label: 'العميل', type: 'foreign', table: 'clients', labelColumn: 'name' },
+    { key: 'client_id', label: 'العميل', type: 'foreign', table: 'clients', labelColumn: 'name', addRoute: '/clients', entityLabel: 'عميل' },
     { key: 'progress_percent', label: 'نسبة الإنجاز %', type: 'number', step: '1' },
     { key: 'engineer', label: 'المهندس', type: 'text' },
     { key: 'foreman', label: 'المراقب', type: 'text' },
@@ -80,9 +80,9 @@ function ProjectsTab() {
 
 function NotesTab() {
   const fields: Field[] = [
-    { key: 'project_id', label: 'المشروع', type: 'foreign', table: 'projects', labelColumn: 'name', required: true },
-    { key: 'date', label: 'التاريخ', type: 'date', required: true },
-    { key: 'text', label: 'الملاحظة', type: 'textarea', required: true },
+    { key: 'project_id', label: 'المشروع', type: 'foreign', table: 'projects', labelColumn: 'name', addRoute: '/projects', entityLabel: 'مشروع' },
+    { key: 'date', label: 'التاريخ', type: 'date' },
+    { key: 'text', label: 'الملاحظة', type: 'textarea' },
     { key: 'photo_url', label: 'رابط الصورة', type: 'text', placeholder: 'https://…' },
   ];
   const renderCard: CardRenderer<DailyNote> = (r) => ({

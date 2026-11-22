@@ -74,9 +74,9 @@ function MaterialsTab() {
 
 function QuotesTab() {
   const fields: Field[] = [
-    { key: 'material_id', label: 'المادة', type: 'foreign', table: 'materials', labelColumn: 'name', required: true },
-    { key: 'supplier', label: 'المورّد', type: 'text', required: true, placeholder: 'شركة …' },
-    { key: 'price', label: 'السعر', type: 'number', required: true, step: '0.01' },
+    { key: 'material_id', label: 'المادة', type: 'foreign', table: 'materials', labelColumn: 'name', addRoute: '/materials', entityLabel: 'مادة' },
+    { key: 'supplier', label: 'المورّد', type: 'text', placeholder: 'شركة …' },
+    { key: 'price', label: 'السعر', type: 'number', step: '0.01' },
     { key: 'date', label: 'التاريخ', type: 'date' },
     { key: 'notes', label: 'ملاحظات', type: 'textarea' },
   ];
@@ -100,7 +100,7 @@ function QuotesTab() {
 function PriceListTab({ listName }: { listName: string }) {
   const fields: Field[] = [
     { key: 'list_name', label: 'القائمة', type: 'text', required: true },
-    { key: 'material_id', label: 'المادة', type: 'foreign', table: 'materials', labelColumn: 'name' },
+    { key: 'material_id', label: 'المادة', type: 'foreign', table: 'materials', labelColumn: 'name', addRoute: '/materials', entityLabel: 'مادة' },
     { key: 'price', label: 'السعر', type: 'number', step: '0.01' },
     { key: 'unit', label: 'الوحدة', type: 'text', placeholder: 'متر / طن' },
   ];
@@ -124,7 +124,7 @@ function PriceListTab({ listName }: { listName: string }) {
 
 function QuantitiesTab() {
   const fields: Field[] = [
-    { key: 'material_id', label: 'المادة', type: 'foreign', table: 'materials', labelColumn: 'name', required: true },
+    { key: 'material_id', label: 'المادة', type: 'foreign', table: 'materials', labelColumn: 'name', addRoute: '/materials', entityLabel: 'مادة' },
     {
       key: 'building_type',
       label: 'نوع المبنى',
@@ -134,7 +134,7 @@ function QuantitiesTab() {
         { value: 'apartment', label: 'شقة' },
       ],
     },
-    { key: 'qty', label: 'الكمية', type: 'number', required: true, step: '0.01' },
+    { key: 'qty', label: 'الكمية', type: 'number', step: '0.01' },
   ];
   const renderCard: CardRenderer<Quantity> = (r) => ({
     title: r.building_type === 'villa' ? 'فيلا' : r.building_type === 'apartment' ? 'شقة' : '—',

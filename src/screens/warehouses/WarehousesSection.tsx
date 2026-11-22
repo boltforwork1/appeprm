@@ -64,9 +64,9 @@ function WarehousesTab() {
 
 function StockTab() {
   const fields: Field[] = [
-    { key: 'warehouse_id', label: 'المخزن', type: 'foreign', table: 'warehouses', labelColumn: 'name', required: true },
-    { key: 'material_id', label: 'المادة', type: 'foreign', table: 'materials', labelColumn: 'name', required: true },
-    { key: 'qty', label: 'الكمية', type: 'number', required: true, step: '0.01' },
+    { key: 'warehouse_id', label: 'المخزن', type: 'foreign', table: 'warehouses', labelColumn: 'name', addRoute: '/warehouses', entityLabel: 'مخزن' },
+    { key: 'material_id', label: 'المادة', type: 'foreign', table: 'materials', labelColumn: 'name', addRoute: '/materials', entityLabel: 'مادة' },
+    { key: 'qty', label: 'الكمية', type: 'number', step: '0.01' },
   ];
   const renderCard: CardRenderer<Stock> = (r) => ({
     title: `كمية: ${r.qty ?? '—'}`,
@@ -87,9 +87,9 @@ function StockTab() {
 
 function RequestsTab() {
   const fields: Field[] = [
-    { key: 'project_id', label: 'المشروع', type: 'foreign', table: 'projects', labelColumn: 'name', required: true },
-    { key: 'material_id', label: 'المادة', type: 'foreign', table: 'materials', labelColumn: 'name', required: true },
-    { key: 'qty', label: 'الكمية المطلوبة', type: 'number', required: true, step: '0.01' },
+    { key: 'project_id', label: 'المشروع', type: 'foreign', table: 'projects', labelColumn: 'name', addRoute: '/projects', entityLabel: 'مشروع' },
+    { key: 'material_id', label: 'المادة', type: 'foreign', table: 'materials', labelColumn: 'name', addRoute: '/materials', entityLabel: 'مادة' },
+    { key: 'qty', label: 'الكمية المطلوبة', type: 'number', step: '0.01' },
     { key: 'status', label: 'الحالة', type: 'select', options: statusOptions },
   ];
   const renderCard: CardRenderer<Request> = (r) => ({

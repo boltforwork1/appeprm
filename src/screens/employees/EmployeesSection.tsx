@@ -69,8 +69,8 @@ function EmployeesTab() {
 
 function AttendanceTab() {
   const fields: Field[] = [
-    { key: 'employee_id', label: 'الموظف', type: 'foreign', table: 'employees', labelColumn: 'name', required: true },
-    { key: 'date', label: 'التاريخ', type: 'date', required: true },
+    { key: 'employee_id', label: 'الموظف', type: 'foreign', table: 'employees', labelColumn: 'name', addRoute: '/employees', entityLabel: 'موظف' },
+    { key: 'date', label: 'التاريخ', type: 'date' },
     { key: 'status', label: 'الحالة', type: 'select', options: attendanceOptions },
   ];
   const renderCard: CardRenderer<Attendance> = (r) => ({
@@ -92,13 +92,13 @@ function AttendanceTab() {
 
 function SalariesTab() {
   const fields: Field[] = [
-    { key: 'employee_id', label: 'الموظف', type: 'foreign', table: 'employees', labelColumn: 'name', required: true },
-    { key: 'month', label: 'الشهر', type: 'text', required: true, placeholder: '2026-01' },
-    { key: 'amount', label: 'المبلغ', type: 'number', required: true, step: '0.01' },
+    { key: 'employee_id', label: 'الموظف', type: 'foreign', table: 'employees', labelColumn: 'name', addRoute: '/employees', entityLabel: 'موظف' },
+    { key: 'month', label: 'الشهر', type: 'text', placeholder: '2026-01' },
+    { key: 'amount', label: 'المبلغ', type: 'number', step: '0.01' },
     {
       key: 'paid',
       label: 'الحالة',
-      type: 'select',
+      type: 'boolean',
       options: [
         { value: 'false', label: 'غير مدفوع' },
         { value: 'true', label: 'مدفوع' },
@@ -129,9 +129,9 @@ function SalariesTab() {
 
 function LeavesTab() {
   const fields: Field[] = [
-    { key: 'employee_id', label: 'الموظف', type: 'foreign', table: 'employees', labelColumn: 'name', required: true },
-    { key: 'start_date', label: 'من تاريخ', type: 'date', required: true },
-    { key: 'end_date', label: 'إلى تاريخ', type: 'date', required: true },
+    { key: 'employee_id', label: 'الموظف', type: 'foreign', table: 'employees', labelColumn: 'name', addRoute: '/employees', entityLabel: 'موظف' },
+    { key: 'start_date', label: 'من تاريخ', type: 'date' },
+    { key: 'end_date', label: 'إلى تاريخ', type: 'date' },
     { key: 'reason', label: 'السبب', type: 'textarea' },
   ];
   const renderCard: CardRenderer<Leave> = (r) => ({

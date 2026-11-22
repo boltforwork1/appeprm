@@ -54,13 +54,14 @@ function scrollIntoViewOnFocus(e: React.FocusEvent<HTMLInputElement | HTMLTextAr
   }, 300);
 }
 
-export function TextField({ label, value, onChange, type = 'text', placeholder, step }: {
+export function TextField({ label, value, onChange, type = 'text', placeholder, step, error }: {
   label: string;
   value: string;
   onChange: (v: string) => void;
   type?: string;
   placeholder?: string;
   step?: string;
+  error?: string;
 }) {
   return (
     <label className="block mb-4">
@@ -74,15 +75,17 @@ export function TextField({ label, value, onChange, type = 'text', placeholder, 
         onFocus={scrollIntoViewOnFocus}
         className="w-full rounded-xl border border-sand-200 bg-sand-50 px-4 py-3 text-base text-sand-800 placeholder:text-sand-400 focus:border-brand-500 focus:bg-white focus:ring-2 focus:ring-brand-200 outline-none transition"
       />
+      {error && <span className="mt-1 block text-xs font-semibold text-red-500">{error}</span>}
     </label>
   );
 }
 
-export function TextAreaField({ label, value, onChange, placeholder }: {
+export function TextAreaField({ label, value, onChange, placeholder, error }: {
   label: string;
   value: string;
   onChange: (v: string) => void;
   placeholder?: string;
+  error?: string;
 }) {
   return (
     <label className="block mb-4">
@@ -95,15 +98,17 @@ export function TextAreaField({ label, value, onChange, placeholder }: {
         onFocus={scrollIntoViewOnFocus}
         className="w-full resize-none rounded-xl border border-sand-200 bg-sand-50 px-4 py-3 text-base text-sand-800 placeholder:text-sand-400 focus:border-brand-500 focus:bg-white focus:ring-2 focus:ring-brand-200 outline-none transition"
       />
+      {error && <span className="mt-1 block text-xs font-semibold text-red-500">{error}</span>}
     </label>
   );
 }
 
-export function SelectField({ label, value, onChange, options }: {
+export function SelectField({ label, value, onChange, options, error }: {
   label: string;
   value: string;
   onChange: (v: string) => void;
   options: { value: string; label: string }[];
+  error?: string;
 }) {
   return (
     <label className="block mb-4">
@@ -119,6 +124,7 @@ export function SelectField({ label, value, onChange, options }: {
           <option key={o.value} value={o.value}>{o.label}</option>
         ))}
       </select>
+      {error && <span className="mt-1 block text-xs font-semibold text-red-500">{error}</span>}
     </label>
   );
 }
