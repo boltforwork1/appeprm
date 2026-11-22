@@ -27,7 +27,8 @@ export function useForeignOptionsBatch(refs: ForeignRef[]) {
           console.error(`[useForeignOptionsBatch:${r.table}]`, error);
           return [];
         }
-        return (data ?? []).map((row) => ({ id: row.id as string, label: String(row[r.labelColumn] ?? '') }));
+        const rows = (data ?? []) as unknown as Record<string, unknown>[];
+        return rows.map((row) => ({ id: row.id as string, label: String(row[r.labelColumn] ?? '') }));
       })
     ).then((results) => {
       if (!mounted) return;

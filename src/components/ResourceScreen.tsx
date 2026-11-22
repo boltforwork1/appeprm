@@ -87,8 +87,8 @@ export function ResourceScreen<T extends Record<string, unknown> & { id: string 
     }
     setSaving(true);
     try {
-      if (editing) await updateRow<T>(table, editing.id, buildPayload());
-      else await insertRow<T>(table, buildPayload());
+      if (editing) await updateRow<T>(table, editing.id, buildPayload() as Partial<T>);
+      else await insertRow<T>(table, buildPayload() as Partial<T>);
       setSheetOpen(false);
       await reload();
     } catch (err) {
@@ -173,7 +173,7 @@ export function ResourceScreen<T extends Record<string, unknown> & { id: string 
                 label={f.label + (f.required ? ' *' : '')}
                 value={form[f.key] ?? ''}
                 onChange={(v) => setForm((p) => ({ ...p, [f.key]: v }))}
-                options={opts}
+                options={opts.map((o) => ({ value: o.id, label: o.label }))}
               />
             );
           }

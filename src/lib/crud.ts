@@ -37,7 +37,7 @@ export function useList<T extends Record<string, unknown>>(
       console.error(`[useList:${table}]`, err);
       setError(err.message);
     } else {
-      setRows((data ?? []) as T[]);
+      setRows((data ?? []) as unknown as T[]);
     }
     setLoading(false);
   }, [table, select, extraFilter, search, searchColumns, orderBy]);
@@ -56,7 +56,7 @@ export async function insertRow<T extends Record<string, unknown>>(
   table: string,
   payload: Partial<T>
 ): Promise<T | null> {
-  const { data, error } = await supabase.from(table).insert(payload).select().single();
+  const { data, error } = await supabase.from(table).insert(payload as never).select().single();
   if (error) {
     console.error(`[insertRow:${table}]`, error);
     throw error;
@@ -72,7 +72,7 @@ export async function updateRow<T extends Record<string, unknown>>(
   id: string,
   payload: Partial<T>
 ): Promise<T | null> {
-  const { data, error } = await supabase.from(table).update(payload).eq('id', id).select().single();
+  const { data, error } = await supabase.from(table).update(payload as never).eq('id', id).select().single();
   if (error) {
     console.error(`[updateRow:${table}]`, error);
     throw error;
